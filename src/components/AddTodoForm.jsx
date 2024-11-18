@@ -18,6 +18,7 @@ const AddTodoForm = ({ text, setText, handleSubmit, isEditing }) => {
     </div>
   );
 };
+
 AddTodoForm.propTypes = {
   text: PropTypes.string.isRequired,
   setText: PropTypes.func.isRequired,
