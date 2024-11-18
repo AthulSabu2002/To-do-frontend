@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:5000/api/todos';
+const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
 export const todoApi = {
   fetchTodos: async () => {
