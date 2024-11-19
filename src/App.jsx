@@ -4,6 +4,7 @@ import AddTodoForm from './components/AddTodoForm';
 import TodoList from './components/TodoList';
 import DeleteButton from './components/DeleteButton';
 import './App.css';
+import { todoApi } from './services/todoApi';
 
 const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
@@ -21,8 +22,7 @@ const App = () => {
 
   const fetchTodos = async () => {
     try {
-      const response = await fetch(BASE_URL);
-      const data = await response.json();
+      const data = await todoApi.fetchTodos();
       setTodos(data);
     } catch (error) {
       console.error('Error fetching todos:', error);
@@ -36,26 +36,12 @@ const App = () => {
     try {
       if (editingTodo) {
 
-        const response = await fetch(`BASE_URL/${editingTodo._id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text }),
-        });
-        const updatedTodo = await response.json();
+        const updatedTodo = await todoApi.updateTodo(editingTodo._id, text);
         setTodos(todos.map((todo) => (todo._id === updatedTodo._id ? updatedTodo : todo)));
         setEditingTodo(null);
       } else {
 
-        const newTodo = {
-          text,
-          completed: false,
-        };
-        const response = await fetch(BASE_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newTodo),
-        });
-        const savedTodo = await response.json();
+        const savedTodo = await todoApi.addTodo(text);
         setTodos([...todos, savedTodo]);
       }
       setText('');
@@ -80,11 +66,7 @@ const App = () => {
 
   const handleDelete = async () => {
     try {
-      await Promise.all(
-        selectedIds.map((id) =>
-          fetch(`BASE_URL/${id}`, { method: 'DELETE' })
-        )
-      );
+      await todoApi.deleteMany(selectedIds);
       setTodos(todos.filter((todo) => !selectedIds.includes(todo._id)));
       setSelectedIds([]);
     } catch (error) {
