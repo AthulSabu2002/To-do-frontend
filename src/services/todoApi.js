@@ -20,5 +20,10 @@ export const todoApi = {
 
   deleteMany: async (ids) => {
     await axios.post(`${BASE_URL}/deleteMany`, { ids });
+  },
+
+  toggleComplete: async (id, completed) => {
+    const response = await axios.put(`${BASE_URL}/${id}`, { completed });
+    return response.data;
   }
 };

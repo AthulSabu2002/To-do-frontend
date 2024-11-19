@@ -17,7 +17,7 @@ const TodoItem = ({ todo, onSelect, onEdit, onToggleComplete, isSelected }) => {
         <button className="edit-btn" onClick={() => onEdit(todo)}>
           Edit
         </button>
-        <button className="complete-btn" onClick={() => onToggleComplete(todo._id)}>
+        <button className="complete-btn" onClick={() => onToggleComplete(todo._id, !todo.completed)}>
           {todo.completed ? 'Undo' : 'Complete'}
         </button>
       </div>
