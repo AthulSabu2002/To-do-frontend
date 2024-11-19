@@ -5,6 +5,8 @@ import TodoList from './components/TodoList';
 import DeleteButton from './components/DeleteButton';
 import './App.css';
 
+const BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
 const App = () => {
   const [todos, setTodos] = useState([]);
   const [text, setText] = useState('');
@@ -19,7 +21,7 @@ const App = () => {
 
   const fetchTodos = async () => {
     try {
-      const response = await fetch('/api/todos');
+      const response = await fetch(BASE_URL);
       const data = await response.json();
       setTodos(data);
     } catch (error) {
@@ -34,7 +36,7 @@ const App = () => {
     try {
       if (editingTodo) {
 
-        const response = await fetch(`/api/todos/${editingTodo._id}`, {
+        const response = await fetch(`BASE_URL/${editingTodo._id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ text }),
@@ -48,7 +50,7 @@ const App = () => {
           text,
           completed: false,
         };
-        const response = await fetch('/api/todos', {
+        const response = await fetch(BASE_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newTodo),
@@ -80,7 +82,7 @@ const App = () => {
     try {
       await Promise.all(
         selectedIds.map((id) =>
-          fetch(`/api/todos/${id}`, { method: 'DELETE' })
+          fetch(`BASE_URL/${id}`, { method: 'DELETE' })
         )
       );
       setTodos(todos.filter((todo) => !selectedIds.includes(todo._id)));
