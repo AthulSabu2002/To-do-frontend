@@ -24,7 +24,7 @@ export const todoApi = {
 
   toggleComplete: async (id, completed) => {
     console.log(`Sending PUT request to ${BASE_URL}/${id} with completed: ${completed}`);
-    const response = await axios.put(`${BASE_URL}/${id}`, { completed });
+    const response = await axios.put(`${BASE_URL}/${id}`, { completed, completedAt: completed ? new Date().toISOString() : null });
     console.log('API response data:', response.data);
     return response.data;
   }

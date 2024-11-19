@@ -27,6 +27,7 @@ const TodoList = ({ todos, selectedIds, onSelect, onEdit, onToggleComplete }) =>
           onSelect={onSelect}
           onEdit={() => onEdit(todo)} 
           onToggleComplete={onToggleComplete}
+          createdAt={todo.createdAt}
         />
       ))}
     </div>

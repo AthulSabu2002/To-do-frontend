@@ -1,49 +1,113 @@
 /* Add your styles here */
 .todo-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #ccc;
+  display: grid;
+  grid-template-columns: auto 150px;
+  gap: 20px;
+  padding: 20px;
+  margin: 12px 0;
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.todo-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .checkbox-wrapper {
   display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.todo-main {
+  display: flex;
   align-items: center;
+  gap: 12px;
 }
 
 .todo-text {
-  margin-left: 10px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.todo-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 8px;
+  padding-left: 28px;
+}
+
+.created-at,
+.completed-at {
+  font-size: 12px;
+  color: #7f8c8d;
+}
+
+.completed-label {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .todo-actions {
   display: flex;
-  gap: 10px;
+  gap: 8px;
+  align-items: flex-start;
 }
 
 .edit-btn,
-.complete-btn {
-  padding: 5px 10px;
+.toggle-complete-btn {
+  padding: 8px 16px;
   border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .edit-btn {
-  background-color: #f0ad4e;
+  background-color: #f8f9fa;
+  color: #495057;
+  border: 1px solid #dee2e6;
+}
+
+.edit-btn:hover {
+  background-color: #e9ecef;
+  color: #212529;
+}
+
+.toggle-complete-btn {
+  background-color: #4caf50;
   color: white;
 }
 
-.complete-btn {
-  background-color: #5cb85c;
-  color: white;
+.toggle-complete-btn:hover {
+  background-color: #43a047;
 }
 
-.completed-label {
-  color: green;
-  margin-left: 10px;
+.todo-item.completed {
+  background-color: #f8f9fa;
+  border-color: #e9ecef;
 }
 
 .todo-item.completed .todo-text {
   text-decoration: line-through;
-  color: gray;
+  color: #6c757d;
+}
+
+input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  cursor: pointer;
 }
