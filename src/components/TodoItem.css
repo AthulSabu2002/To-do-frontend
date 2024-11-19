@@ -1,4 +1,3 @@
-
 /* Add your styles here */
 .todo-item {
   display: flex;
@@ -41,4 +40,10 @@
 
 .completed-label {
   color: green;
+  margin-left: 10px;
+}
+
+.todo-item.completed .todo-text {
+  text-decoration: line-through;
+  color: gray;
 }

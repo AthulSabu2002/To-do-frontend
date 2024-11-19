@@ -35,12 +35,10 @@ const App = () => {
 
     try {
       if (editingTodo) {
-
         const updatedTodo = await todoApi.updateTodo(editingTodo._id, text);
         setTodos(todos.map((todo) => (todo._id === updatedTodo._id ? updatedTodo : todo)));
         setEditingTodo(null);
       } else {
-
         const savedTodo = await todoApi.addTodo(text);
         setTodos([...todos, savedTodo]);
       }
@@ -76,7 +74,9 @@ const App = () => {
 
   const handleToggleComplete = async (id, completed) => {
     try {
+      console.log(`Calling API to toggle complete for ${id} to ${completed}`);
       const updatedTodo = await todoApi.toggleComplete(id, completed);
+      console.log('API response:', updatedTodo);
       setTodos(todos.map((todo) => (todo._id === updatedTodo._id ? updatedTodo : todo)));
     } catch (error) {
       console.error('Error toggling complete status:', error);
@@ -99,7 +99,7 @@ const App = () => {
           selectedIds={selectedIds}
           onSelect={handleSelect}
           onEdit={handleEdit}
-          onToggleComplete={handleToggleComplete} 
+          onToggleComplete={handleToggleComplete}
         />
         <DeleteButton
           selectedCount={selectedIds.length}
