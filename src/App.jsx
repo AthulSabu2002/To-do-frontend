@@ -11,12 +11,12 @@ const App = () => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [editingTodo, setEditingTodo] = useState(null);
 
-  // Fetch all todos on component mount
+
   useEffect(() => {
     fetchTodos();
   }, []);
 
-  // Fetch todos from the API
+
   const fetchTodos = async () => {
     try {
       const response = await fetch('/api/todos');
@@ -27,13 +27,13 @@ const App = () => {
     }
   };
 
-  // Handle add or update todo
+
   const handleSubmit = async () => {
     if (!text.trim()) return;
 
     try {
       if (editingTodo) {
-        // Update existing todo
+
         const response = await fetch(`/api/todos/${editingTodo._id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -43,7 +43,7 @@ const App = () => {
         setTodos(todos.map((todo) => (todo._id === updatedTodo._id ? updatedTodo : todo)));
         setEditingTodo(null);
       } else {
-        // Add new todo
+
         const newTodo = {
           text,
           completed: false,
@@ -62,20 +62,20 @@ const App = () => {
     }
   };
 
-  // Handle selecting todos
+
   const handleSelect = (id) => {
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
-  // Handle editing a todo
+
   const handleEdit = (todo) => {
     setEditingTodo(todo);
     setText(todo.text);
   };
 
-  // Handle deleting selected todos
+
   const handleDelete = async () => {
     try {
       await Promise.all(
