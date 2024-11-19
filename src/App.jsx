@@ -74,6 +74,17 @@ const App = () => {
     }
   };
 
+  const handleToggleComplete = async (id) => {
+    try {
+      const todo = todos.find((todo) => todo._id === id);
+      const updatedTodo = await todoApi.toggleComplete(id, !todo.completed);
+      setTodos(todos.map((todo) => (todo._id === updatedTodo._id ? updatedTodo : todo)));
+    } catch (error) {
+      console.error('Error toggling complete status:', error);
+    }
+  };
+
+  
   return (
     <div className="App">
       <div className="todo-container">
@@ -89,6 +100,7 @@ const App = () => {
           selectedIds={selectedIds}
           onSelect={handleSelect}
           onEdit={handleEdit}
+          onToggleComplete={handleToggleComplete} // Pass the new function as a prop
         />
         <DeleteButton
           selectedCount={selectedIds.length}
