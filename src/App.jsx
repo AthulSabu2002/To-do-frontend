@@ -1,42 +1,60 @@
-import { useState, useEffect } from 'react';
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect } from 'react';
 import AddTodoForm from './components/AddTodoForm';
 import TodoList from './components/TodoList';
 import DeleteButton from './components/DeleteButton';
-import { todoApi } from './services/todoApi';
 import './App.css';
 
-function App() {
+const App = () => {
   const [todos, setTodos] = useState([]);
   const [text, setText] = useState('');
   const [selectedIds, setSelectedIds] = useState([]);
   const [editingTodo, setEditingTodo] = useState(null);
 
+  // Fetch all todos on component mount
   useEffect(() => {
     fetchTodos();
   }, []);
 
+  // Fetch todos from the API
   const fetchTodos = async () => {
     try {
-      const data = await todoApi.fetchTodos();
+      const response = await fetch('/api/todos');
+      const data = await response.json();
       setTodos(data);
     } catch (error) {
       console.error('Error fetching todos:', error);
     }
   };
 
+  // Handle add or update todo
   const handleSubmit = async () => {
     if (!text.trim()) return;
-    
+
     try {
       if (editingTodo) {
-        const updatedTodo = await todoApi.updateTodo(editingTodo._id, text);
-        setTodos(todos.map(todo => 
-          todo._id === updatedTodo._id ? updatedTodo : todo
-        ));
+        // Update existing todo
+        const response = await fetch(`/api/todos/${editingTodo._id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text }),
+        });
+        const updatedTodo = await response.json();
+        setTodos(todos.map((todo) => (todo._id === updatedTodo._id ? updatedTodo : todo)));
         setEditingTodo(null);
       } else {
-        const newTodo = await todoApi.addTodo(text);
-        setTodos([...todos, newTodo]);
+        // Add new todo
+        const newTodo = {
+          text,
+          completed: false,
+        };
+        const response = await fetch('/api/todos', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newTodo),
+        });
+        const savedTodo = await response.json();
+        setTodos([...todos, savedTodo]);
       }
       setText('');
     } catch (error) {
@@ -44,21 +62,28 @@ function App() {
     }
   };
 
+  // Handle selecting todos
   const handleSelect = (id) => {
-    setSelectedIds(prev =>
-      prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
+  // Handle editing a todo
   const handleEdit = (todo) => {
     setEditingTodo(todo);
     setText(todo.text);
   };
 
+  // Handle deleting selected todos
   const handleDelete = async () => {
     try {
-      await todoApi.deleteMany(selectedIds);
-      setTodos(todos.filter(todo => !selectedIds.includes(todo._id)));
+      await Promise.all(
+        selectedIds.map((id) =>
+          fetch(`/api/todos/${id}`, { method: 'DELETE' })
+        )
+      );
+      setTodos(todos.filter((todo) => !selectedIds.includes(todo._id)));
       setSelectedIds([]);
     } catch (error) {
       console.error('Error deleting todos:', error);
@@ -88,6 +113,6 @@ function App() {
       </div>
     </div>
   );
-}
+};
 
 export default App;
