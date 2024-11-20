@@ -13,22 +13,23 @@ const App = () => {
   const [text, setText] = useState('');
   const [selectedIds, setSelectedIds] = useState([]);
   const [editingTodo, setEditingTodo] = useState(null);
-
+  const [isLoading, setIsLoading] = useState(true); 
 
   useEffect(() => {
     fetchTodos();
   }, []);
 
-
   const fetchTodos = async () => {
     try {
+      setIsLoading(true);
       const data = await todoApi.fetchTodos();
       setTodos(data);
     } catch (error) {
       console.error('Error fetching todos:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
-
 
   const handleSubmit = async () => {
     if (!text.trim()) return;
@@ -48,19 +49,16 @@ const App = () => {
     }
   };
 
-
   const handleSelect = (id) => {
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
     );
   };
 
-
   const handleEdit = (todo) => {
     setEditingTodo(todo);
     setText(todo.text);
   };
-
 
   const handleDelete = async () => {
     try {
@@ -83,29 +81,35 @@ const App = () => {
     }
   };
 
-  
   return (
     <div className="App">
-      <div className="todo-container">
-        <h1>Tasks</h1>
-        <AddTodoForm
-          text={text}
-          setText={setText}
-          handleSubmit={handleSubmit}
-          isEditing={!!editingTodo}
-        />
-        <TodoList
-          todos={todos}
-          selectedIds={selectedIds}
-          onSelect={handleSelect}
-          onEdit={handleEdit}
-          onToggleComplete={handleToggleComplete}
-        />
-        <DeleteButton
-          selectedCount={selectedIds.length}
-          onDelete={handleDelete}
-        />
-      </div>
+      {isLoading ? (
+        <div className="loading">
+          <div className="loader"></div>
+          <p>Loading...</p>
+        </div>
+      ) : (
+        <div className="todo-container">
+          <h1>Tasks</h1>
+          <AddTodoForm
+            text={text}
+            setText={setText}
+            handleSubmit={handleSubmit}
+            isEditing={!!editingTodo}
+          />
+          <TodoList
+            todos={todos}
+            selectedIds={selectedIds}
+            onSelect={handleSelect}
+            onEdit={handleEdit}
+            onToggleComplete={handleToggleComplete}
+          />
+          <DeleteButton
+            selectedCount={selectedIds.length}
+            onDelete={handleDelete}
+          />
+        </div>
+      )}
     </div>
   );
 };
